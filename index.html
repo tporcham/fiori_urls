@@ -91,6 +91,10 @@
   
 </head>
 <body>
+  <h2>Creating Fiori Standalone App URL</h2>  
+  <p>Fiori apps can be run standalone without using the launch pad. To directly access a Fiori App you need to create a special URL as described in <a href="http://help.sap.com/saphelp_nw74/helpdata/de/53/7758e0deb0477386ea400c915073b3/frameset.htm">SAP Help</a>.</p>
+  <p>The following form can be used to create such an URL. The Port and Client field is optional.</p>
+  
   <form>
     <fielset>
     <label class="field">Protocol: </label>
@@ -116,9 +120,9 @@
     
     <label class="field">Shell configuration: </label>
     <select id="txtShellConfig">
+       <option>headerless</option>
       <option>standalone</option>
-      <option>embedded</option>
-      <option>headerless</option>
+      <option>embedded</option>   
       <option></option></select><br/><br/>
        
     <p style="font-weight: bold">App specific Parameters: </p>
