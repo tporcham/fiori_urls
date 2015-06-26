@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Fiori standalone App URL Generator</title>
+  
+  <style type="text/css">
+    fieldset {
+      width: 640;
+    }
+    label.field {
+      text-align: right;
+      width: 140px;
+      float: left;
+      font-weight: bold;
+    }
+    fieldset p {
+      clear: both;
+      padding: 5px;
+    }
+    
+  </style>
+  
+  <script type="text/javascript">
+    
+    window.onload = function() {
+      "use strict";
+      
+      var generateUrl = function(opt) {
+        
+        var generateParams = function(params){
+          var str= "";
+          for(var i=0; i < params.length; i++) {
+            str += "&" + params[i].name + "=" + encodeURIComponent(params[i].val);          
+          }
+          return str;
+        }
+                
+        var getOptional = function(name, val) {
+          if(val.trim() !== ""){
+            return name + val;
+          } else {
+            return "";
+          }
+        }
+        
+        var fioriUrl = opt.protocol + "://" + opt.server + getOptional( ":", opt.port ) +
+            opt.launchpadPath + getOptional("?sap-client=", opt.client) + 
+            getOptional("&sap-ushell-config=",  opt.shellConfig) +                        
+            encodeURI("#Shell-runStandaloneApp"
+          + "?" + "sap-ushell-SAPUI5.Component=" + encodeURIComponent(opt.component)
+          + "&" + "sap-ushell-url=" + encodeURIComponent(opt.appPath) + generateParams( opt.params ) );
+        return fioriUrl;
+      }
+    
+      var onGenUrl = function(){
+        var getParams = function(){
+          var res = new Array();
+          for(var i=1; i <= 5; i++) {
+            var name = document.getElementById("txtParam" + i).value.trim();
+            var val = document.getElementById("txtVal" + i).value.trim();
+            if(val !== "") {
+              res.push({
+                name: name,
+                val: val
+              });
+            }  
+          }
+          return res;
+        }
+        
+        var options = {
+          protocol: document.getElementById("txtProtocol").value,
+          server: document.getElementById("txtServer").value,
+          port: document.getElementById("txtPort").value,
+          launchpadPath: document.getElementById("txtLaunchPad").value,
+          client: document.getElementById("txtClient").value,
+          component: document.getElementById("txtComponent").value,
+          appPath: document.getElementById("txtApp").value,
+          shellConfig: document.getElementById("txtShellConfig").value,
+          params : getParams()
+        }
+        
+        document.getElementById("pResult").value = generateUrl(options);    
+        return false;
+      }
+      document.getElementById("btnGenerateURL").onclick = onGenUrl;
+    }
+    
+  </script>
+  
+</head>
+<body>
+  <form>
+    <fielset>
+    <label class="field">Protocol: </label>
+      <select id="txtProtocol"><option>http</option><option>https</option></select><br/>  
+      
+    <label class="field">Server: </label>
+      <input id="txtServer" value="<server>" size="32" /><br/>  
+      
+    <label class="field">Port: </label>
+      <input id="txtPort" value="<port>" size="10" /><br/>
+    
+    <label class="field">Launchpad Path:</label>
+      <input id="txtLaunchPad" value="/sap/bc/ui5_ui5/ui2/ushell/shells/abap/FioriLaunchpad.html" size="64" /></br>  
+    
+    <label class="field">Client: </label>
+      <input id="txtClient" value="123" size="10" /><br/>
+    
+    <label class="field">UI5 Component: </label>
+      <input id="txtComponent" value="cus.crm.opportunity" size="64" /><br/>
+   
+    <label class="field">App path: </label>
+    <input id="txtApp" value="/sap/bc/ui5_ui5/sap/crm_opprtnty" size="64" /><br/>
+    
+    <label class="field">Shell configuration: </label>
+    <select id="txtShellConfig">
+      <option>standalone</option>
+      <option>embedded</option>
+      <option>headerless</option>
+      <option></option></select><br/><br/>
+       
+    <p style="font-weight: bold">App specific Parameters: </p>
+      <input id="txtParam1" value="<param1>" size="20" /> = <input id="txtVal1" value="" size="40" /><br/>
+      <input id="txtParam2" value="<param2>" size="20" /> = <input id="txtVal2" value="" size="40" /><br/>
+      <input id="txtParam3" value="<param3>" size="20" /> = <input id="txtVal3" value="" size="40" /><br/>
+      <input id="txtParam4" value="<param4>" size="20" /> = <input id="txtVal4" value="" size="40" /><br/>
+      <input id="txtParam5" value="<param5>" size="20" /> = <input id="txtVal5" value="" size="40" /><br/>
+      <br/>
+      <button id="btnGenerateURL">Generate URL</button>
+  </fielset> 
+  </form>
+  
+  <p>The resulting Fiori standalone App URL is </p>
+  <div style="background-color:LightGreen;border:1px solid black;padding:10px;" >
+  <textarea id="pResult" rows="5" cols="100"></textarea>
+  </div>  
+</body>
+</html>
